@@ -47,7 +47,10 @@ jobs:
           scope: resourcegroup
           resourceGroupName: rg-githubactions
           subscriptionId: d18c27f6-f24c-4244-92e5-fbbf98355a16
-          template: ./arm-templates/storageaccount.json
+          template:
+           ./arm-templates/storageaccount.json
+           storageAccountName=globostg4442
+           location="West Europe"
           parameters: ./arm-templates/storageaccount.parameters.json
           deploymentMode: incremental
 
