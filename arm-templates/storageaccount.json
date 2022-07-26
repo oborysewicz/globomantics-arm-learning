@@ -37,5 +37,9 @@
             "tier": "Premium"
         }
     }],
-    "outputs": {}
+    "outputs": {
+    "BlobUri": {
+        "type": "string",
+        "value": "[reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))).primaryEndpoints.blob]"
+    }}
 }
