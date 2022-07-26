@@ -10,6 +10,10 @@ on:
   workflow_dispatch:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
+env:
+  resource_group_name: rg-githubactions
+  location: "North Europe"
+  subscriptionId: d18c27f6-f24c-4244-92e5-fbbf98355a16
 jobs:
   # This workflow contains a single job called "build"
   armDeploy:
@@ -32,31 +36,31 @@ jobs:
 #          inlinescript: |
 #            az deployment sub create --location "North Europe" --template-file ./arm-templates/resourcegroup.json  
             
-      - name: Deploy Resource Group rg-githubactions
+      - name: Deploy Resource Group ${{ env.resource_group_name }}
         uses: Azure/arm-deploy@v1
         with:
           scope: subscription
-          subscriptionId: d18c27f6-f24c-4244-92e5-fbbf98355a16
-          region: North Europe
+          subscriptionId: ${{ env.subscriptionId }}
+          region: ${{ env.location }}
           template: ./arm-templates/resourcegroup.json
           parameters:
-            location="North Europe"
-            resourceGroupName=rg-githubactions
-          deploymentName: rg-githubactions
+            location=${{ env.location }}
+            resourceGroupName=${{ env.resource_group_name }}
+          deploymentName: ${{ env.resource_group_name }}
           
       - name: Deploy Storage Account
         uses: Azure/arm-deploy@v1
         id: storageAccountDeploy
         with:
           scope: resourcegroup
-          resourceGroupName: rg-githubactions
-          subscriptionId: d18c27f6-f24c-4244-92e5-fbbf98355a16
+          resourceGroupName: ${{ env.resource_group_name }}
+          subscriptionId: ${{ env.subscriptionId }}
           template: ./arm-templates/storageaccount.json
           parameters: 
             #./arm-templates/storageaccount.parameters.json
             sku=Standard_LRS
             storageAccountName="globostg4442"
-            location="West Europe"
+            location=${{ env.location }}
           deploymentMode: incremental
 
      # - run: echo ${{ steps.storageAccountDeploy.outputs.BlobUri }}
@@ -65,9 +69,10 @@ jobs:
         uses: Azure/arm-deploy@v1
         with:
           scope: resourcegroup
-          resourceGroupName: rg-githubactions
-          subscriptionId: d18c27f6-f24c-4244-92e5-fbbf98355a16
+          resourceGroupName: ${{ env.resource_group_name }}
+          subscriptionId: ${{ env.subscriptionId }}
           template: ./arm-templates/virtualmachine.json
           parameters: 
             adminPassword=${{ secrets.UBUNTU_ADMIN_PASSWORD }}
+            location=${{ env.location }}
           deploymentMode: incremental
