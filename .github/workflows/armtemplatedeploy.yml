@@ -12,7 +12,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 env:
   resource_group_name: rg-githubactions
-  location: "North Europe"
+  location: North Europe
   subscriptionId: d18c27f6-f24c-4244-92e5-fbbf98355a16
 jobs:
   # This workflow contains a single job called "build"
@@ -41,10 +41,10 @@ jobs:
         with:
           scope: subscription
           subscriptionId: ${{ env.subscriptionId }}
-          region: ${{ env.location }}
+          region: "${{ env.location }}"
           template: ./arm-templates/resourcegroup.json
           parameters:
-            location=${{ env.location }}
+            location="${{ env.location }}"
             resourceGroupName=${{ env.resource_group_name }}
           deploymentName: ${{ env.resource_group_name }}
           
@@ -60,7 +60,7 @@ jobs:
             #./arm-templates/storageaccount.parameters.json
             sku=Standard_LRS
             storageAccountName="globostg4442"
-            location=${{ env.location }}
+            location="${{ env.location }}"
           deploymentMode: incremental
 
      # - run: echo ${{ steps.storageAccountDeploy.outputs.BlobUri }}
@@ -74,5 +74,5 @@ jobs:
           template: ./arm-templates/virtualmachine.json
           parameters: 
             adminPassword=${{ secrets.UBUNTU_ADMIN_PASSWORD }}
-            location=${{ env.location }}
+            location="${{ env.location }}"
           deploymentMode: incremental
